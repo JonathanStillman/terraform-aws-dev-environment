@@ -48,7 +48,36 @@ resource "aws_route" "default_route" {
 
 # Associate the previously created Route Table with the public subnet
 resource "aws_route_table_association" "mtc_public_assoc" {
-  subnet_id      = aws_subnet.mtc_public_subnet.id     # Specify the ID of the public subnet
-  route_table_id = aws_route_table.mtc_public_rt.id    # Specify the ID of the associated Route Table
+  subnet_id      = aws_subnet.mtc_public_subnet.id  # Specify the ID of the public subnet
+  route_table_id = aws_route_table.mtc_public_rt.id # Specify the ID of the associated Route Table
+}
+
+# Define an AWS Security Group named "mtc_public_sg"
+resource "aws_security_group" "mtc_public_sg" {
+  name        = "dev-sg"             # Set the name for the Security Group
+  description = "dev security group" # Provide a description for the Security Group
+  vpc_id      = aws_vpc.mtc_vpc.id   # Specify the ID of the associated VPC
+
+  # Define ingress rules for the Security Group
+  ingress = {
+    from_port   = 0                              # Allow traffic from any port
+    to_port     = 0                              # Allow traffic to any port
+    protocol    = "-1"                           # Allow traffic of any protocol
+    cidr_blocks = ["0.0.0.0/0", "11.11.11.1/32"] # Allow traffic from any IP and a specific IP
+  }
+
+  # Define egress rules for the Security Group
+  egress = {
+    from_port   = 0                       # Allow traffic from any port
+    to_port     = 0                       # Allow traffic to any port
+    protocol    = "-1"                    # Allow traffic of any protocol
+    cidr_blocks = ["12.12.12.1/0"]         # Allow traffic to any IP
+  }
+}
+
+# Define an AWS Key Pair named "mtc_auth"
+resource "aws_key_pair" "mtc_auth" {
+  key_name   = "mtckey"                      # Set the name for the Key Pair
+  public_key = file("your-public-key")       # Specify the path to the public key file
 }
 
