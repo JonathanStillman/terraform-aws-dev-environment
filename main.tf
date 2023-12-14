@@ -81,3 +81,20 @@ resource "aws_key_pair" "mtc_auth" {
   public_key = file("your-public-key")       # Specify the path to the public key file
 }
 
+# Define an AWS EC2 Instance named "dev_node"
+resource "aws_instance" "dev_node" {
+  instance_type = "t2.micro"                            # Set the instance type to t2.micro
+  ami           = data.aws_ami.server_ami.id           # Reference the AMI ID from the data source
+
+  tags = {
+    Name = "dev-node"                                  # Set a tag for the EC2 instance with the key "Name" and value "dev-node"
+  }
+
+  key_name              = aws_key_pair.mtc_auth.id     # Reference the Key Pair ID for SSH access
+  vpc_security_group_ids = [aws_security_group.mtc_public_sg.id]  # Reference the Security Group ID for network configuration
+  subnet_id             = aws_subnet.mtc_public_subnet.id         # Reference the Subnet ID for network configuration
+
+  root_block_device {
+    volume_size = 10                                   # Set the root volume size to 10 GB
+  }
+}
