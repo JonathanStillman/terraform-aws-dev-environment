@@ -64,6 +64,4 @@ This Terraform configuration sets up a basic AWS infrastructure consisting of a 
 
 Feel free to modify the variables and scripts as needed for your specific use case.
 
-For questions or issues, please contact [Your Contact Information].
-
 **Note:** Ensure that sensitive information such as AWS credentials and private keys are handled securely and not exposed in the repository. Consider using environment variables or other secure methods for managing sensitive information.
